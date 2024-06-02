@@ -47,12 +47,6 @@ class server:
         while self.is_run:
             client_message = conn.recv(4096)
 
-            # 生成一个随机数，这个随机数决定了模拟丢包的结果
-            random_num = random.random()
-            if random_num < lost_possibility:
-                print('丢包了，服务端发送的数据报不正确')
-                continue
-
             raw_message = client_message.decode()
             raw_message_list = raw_message.split(maxsplit=2)
             message_ack = int(raw_message_list[0])
@@ -62,6 +56,12 @@ class server:
             if message_data == 'exit':
                 self.terminate()
                 break
+
+            # 生成一个随机数，这个随机数决定了模拟丢包的结果
+            random_num = random.random()
+            if random_num < lost_possibility:
+                print('丢包了，服务端发送的数据报不正确')
+                continue
 
             print('服务端已经正确收到来自客户端的数据：')
             print('ack 的值为：' + message_ack.__str__())
